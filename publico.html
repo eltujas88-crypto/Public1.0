@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prellenado</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Arial, sans-serif;
+}
+
+
+body{
+
+    background:#f2f4f7;
+    padding-bottom:90px;
+
+}
+
+
+.app{
+
+    width:100%;
+    max-width:480px;
+    margin:auto;
+
+}
+
+
+
+/* CABECERA */
+
+.header{
+
+    background:linear-gradient(135deg,#1b8f5a,#146c43);
+
+    color:white;
+
+    padding:15px 20px;
+
+    border-radius:0 0 22px 22px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+
+}
+
+
+.header h1{
+
+    font-size:20px;
+    font-weight:700;
+
+}
+
+
+.header p{
+
+    margin-top:3px;
+    font-size:12px;
+    opacity:.9;
+
+}
+
+
+
+/* TARJETAS */
+
+.card{
+
+    background:white;
+
+    margin:10px 12px;
+
+    padding:12px 15px;
+
+    border-radius:16px;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+}
+
+
+/* CAMPOS - SIN TÍTULOS */
+
+input,
+textarea,
+select{
+
+    width:100%;
+
+    background:#f5f6f8;
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:10px 12px;
+
+    font-size:13px;
+
+    outline:none;
+
+    margin-bottom:0;
+
+    transition: background 0.2s;
+
+}
+
+input:focus,
+textarea:focus {
+    background: #edf2f7;
+}
+
+
+textarea{
+
+    resize:none;
+
+    height:45px;
+
+    min-height:40px;
+
+}
+
+
+
+/* FILAS - 2 columnas para descripción y precio */
+
+.row-producto{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:8px;
+
+    align-items:start;
+
+}
+
+
+
+/* PRODUCTOS */
+
+.product-card{
+
+    background:#fafafa;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:12px;
+
+    padding:10px 12px;
+
+    margin-bottom:10px;
+
+}
+
+
+
+.product-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:6px;
+
+}
+
+
+.product-header span{
+
+    font-size:12px;
+
+    font-weight:600;
+
+    color:#1b8f5a;
+
+}
+
+
+
+.btn-delete{
+
+    border:none;
+
+    background:#fee2e2;
+
+    color:#dc3545;
+
+    padding:2px 10px;
+
+    border-radius:12px;
+
+    font-size:12px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+.btn-delete:hover {
+    background:#fecaca;
+}
+
+
+/* BOTONES */
+
+button{
+
+    cursor:pointer;
+
+}
+
+
+
+.btn{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:11px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+
+.btn-add{
+
+    background:#e8f5ee;
+
+    color:#1b8f5a;
+
+    margin-top:4px;
+
+}
+
+.btn-add:hover {
+    background:#d1ede0;
+}
+
+
+
+/* TOTAL */
+
+.total-box{
+
+    background:#1f2937;
+
+    color:white;
+
+    border-radius:12px;
+
+    padding:12px 15px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+.total-box strong{
+
+    color:#4ade80;
+
+    font-size:20px;
+
+}
+
+
+
+/* BOTON FIJO */
+
+.footer{
+
+    position:fixed;
+
+    bottom:0;
+
+    left:0;
+
+    right:0;
+
+    background:white;
+
+    padding:8px 10px;
+
+    box-shadow:0 -4px 12px rgba(0,0,0,.12);
+
+}
+
+
+.btn-whatsapp{
+
+    background:#25D366;
+
+    color:white;
+
+    max-width:450px;
+
+    margin:auto;
+
+    display:block;
+
+    padding:12px;
+
+    font-size:14px;
+
+    border-radius:12px;
+
+}
+
+.btn-whatsapp:hover {
+    background:#1da851;
+}
+
+/* Estilos para el resumen de productos */
+.resumen-producto {
+    background: #f0f7f3;
+    border-left: 4px solid #1b8f5a;
+    padding: 6px 10px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.resumen-producto .info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.resumen-producto .info .descripcion-texto {
+    font-weight: 500;
+    color: #1b8f5a;
+}
+
+.resumen-producto .info .precio-texto {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.resumen-producto .info .subtotal {
+    color: #1f2937;
+    font-weight: 700;
+    background: #d4ede1;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+}
+
+.resumen-producto .eliminar-resumen {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+#resumenProductos {
+    margin-bottom: 8px;
+}
+
+/* Ajuste para el textarea */
+textarea.descripcion-producto {
+    height: 40px;
+    min-height: 38px;
+    resize: vertical;
+    font-size: 12px;
+}
+
+input.precio {
+    font-size: 12px;
+    text-align: right;
+}
+
+/* Cliente en una sola fila - nombre más ancho, CI más angosto */
+.row-cliente {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+}
+
+.row-cliente input {
+    padding: 8px 10px;
+    font-size: 12px;
+}
+
+/* Estilo para input de solo números */
+input[type="text"].solo-numeros {
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+
+<div class="header">
+
+<h1>PRELLENADO</h1>
+
+<p>Solicitud rápida de venta</p>
+
+</div>
+
+
+
+
+<!-- DATOS CLIENTE -->
+
+
+<div class="card">
+
+<div class="row-cliente">
+
+<input 
+id="cliente"
+placeholder="Nombre / Razón Social">
+
+<input 
+id="documento"
+class="solo-numeros"
+placeholder="CI / NIT"
+inputmode="numeric"
+pattern="[0-9]*"
+maxlength="15">
+
+</div>
+
+</div>
+
+
+<!-- DETALLE PRODUCTOS -->
+
+
+<div class="card">
+
+<!-- Resumen de productos agregados -->
+<div id="resumenProductos"></div>
+
+<div id="listaProductos">
+
+<!-- PRODUCTO BASE -->
+
+<div class="product-card" id="productoBase">
+
+<div class="product-header">
+
+<span>Producto</span>
+
+<button class="btn-delete" type="button" onclick="eliminarProducto(this)">
+
+Eliminar
+
+</button>
+
+</div>
+
+<!-- DESCRIPCIÓN + PRECIO UNITARIO -->
+
+<div class="row-producto">
+
+<textarea 
+class="descripcion-producto"
+placeholder="Descripción"></textarea>
+
+<input 
+class="precio"
+placeholder="Precio unitario"
+inputmode="decimal">
+
+</div>
+
+</div>
+
+</div>
+
+<button 
+class="btn btn-add"
+id="agregarProducto"
+type="button">
+
++ Agregar producto
+
+</button>
+
+</div>
+
+
+
+
+
+<!-- TOTAL -->
+
+
+<div class="card">
+
+
+<div class="total-box">
+
+
+<span>
+TOTAL
+</span>
+
+
+<strong id="total">
+
+0.00 Bs
+
+</strong>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+<!-- BOTON FIJO -->
+
+
+<div class="footer">
+
+
+<button 
+class="btn btn-whatsapp"
+id="enviarWhatsapp"
+type="button">
+
+ENVIAR POR WHATSAPP
+
+</button>
+
+
+</div>
+
+<script>
+// Contador de productos
+let contadorProductos = 1;
+// Array para almacenar los productos agregados
+let productosAgregados = [];
+
+// Validar que solo se ingresen números en CI/NIT
+document.getElementById('documento').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+// Función para agregar producto
+document.getElementById('agregarProducto').addEventListener('click', function() {
+    // Obtener el producto base
+    const productoBase = document.getElementById('productoBase');
+    
+    // Obtener valores del producto base
+    const descripcionCompleta = productoBase.querySelector('.descripcion-producto').value || '';
+    const precioUnitario = parseFloat(productoBase.querySelector('.precio').value) || 0;
+    
+    // Verificar que tenga descripción y precio
+    if (!descripcionCompleta.trim()) {
+        alert('Por favor, ingresa la descripción del producto.');
+        return;
+    }
+    
+    if (precioUnitario === 0) {
+        alert('Por favor, ingresa un precio unitario válido.');
+        return;
+    }
+    
+    // Extraer cantidad de la descripción (primer número)
+    const cantidadMatch = descripcionCompleta.match(/(\d+)/);
+    const cantidad = cantidadMatch ? parseFloat(cantidadMatch[1]) : 1;
+    
+    // Calcular subtotal
+    const subtotal = cantidad * precioUnitario;
+    
+    // Crear objeto producto
+    const producto = {
+        id: contadorProductos,
+        descripcion: descripcionCompleta,
+        precioUnitario: precioUnitario,
+        cantidad: cantidad,
+        subtotal: subtotal
+    };
+    
+    // Agregar al array
+    productosAgregados.push(producto);
+    
+    // Agregar al resumen
+    agregarResumenProducto(producto);
+    
+    // Actualizar total
+    actualizarTotal();
+    
+    // Limpiar campos del producto base
+    productoBase.querySelector('.descripcion-producto').value = '';
+    productoBase.querySelector('.precio').value = '';
+    
+    // Incrementar contador
+    contadorProductos++;
+});
+
+// Función para agregar producto al resumen
+function agregarResumenProducto(producto) {
+    const resumenDiv = document.getElementById('resumenProductos');
+    
+    const div = document.createElement('div');
+    div.className = 'resumen-producto';
+    div.id = `resumen-${producto.id}`;
+    div.innerHTML = `
+        <div class="info">
+            <span class="descripcion-texto">${producto.descripcion}</span>
+            <span class="precio-texto">${producto.precioUnitario.toFixed(2)} Bs</span>
+            <span class="subtotal">${producto.subtotal.toFixed(2)} Bs</span>
+        </div>
+        <button class="eliminar-resumen" onclick="eliminarProductoResumen(${producto.id})">✕</button>
+    `;
+    
+    resumenDiv.appendChild(div);
+}
+
+// Función para eliminar producto del resumen
+function eliminarProductoResumen(id) {
+    // Eliminar del array
+    productosAgregados = productosAgregados.filter(p => p.id !== id);
+    
+    // Eliminar del DOM
+    const elemento = document.getElementById(`resumen-${id}`);
+    if (elemento) {
+        elemento.remove();
+    }
+    
+    // Actualizar total
+    actualizarTotal();
+}
+
+// Función para eliminar el producto base (ocultar)
+function eliminarProducto(btn) {
+    const productoCard = btn.closest('.product-card');
+    if (productoCard) {
+        productoCard.style.display = 'none';
+        // Limpiar campos
+        productoCard.querySelector('.descripcion-producto').value = '';
+        productoCard.querySelector('.precio').value = '';
+    }
+}
+
+// Función para actualizar el total
+function actualizarTotal() {
+    const totalElement = document.getElementById('total');
+    let total = 0;
+    
+    productosAgregados.forEach(producto => {
+        total += producto.subtotal;
+    });
+    
+    totalElement.textContent = `${total.toFixed(2)} Bs`;
+}
+
+// Función para enviar por WhatsApp - SOLO ABRE WHATSAPP SIN NÚMERO
+document.getElementById('enviarWhatsapp').addEventListener('click', function() {
+    const cliente = document.getElementById('cliente').value || 'No especificado';
+    const documento = document.getElementById('documento').value || 'No especificado';
+    
+    if (productosAgregados.length === 0) {
+        alert('Por favor, agrega al menos un producto.');
+        return;
+    }
+    
+    // Construir mensaje
+    let mensaje = '';
+    
+    // Nombre (sin negritas)
+    mensaje += `${cliente}\n`;
+    
+    // CI/NIT (en negritas)
+    mensaje += `*${documento}*\n`;
+    
+    let totalGeneral = 0;
+    
+    // Recorrer productos
+    productosAgregados.forEach((producto, index) => {
+        const subtotal = producto.cantidad * producto.precioUnitario;
+        totalGeneral += subtotal;
+        
+        // Descripción completa (sin negritas)
+        mensaje += `${producto.descripcion}\n`;
+        
+        // Precio Unitario (en negritas)
+        mensaje += `Precio Unitario: *${producto.precioUnitario.toFixed(2)}*\n`;
+        
+        // Subtotal (sin negritas)
+        mensaje += `Subtotal: ${subtotal.toFixed(2)}\n`;
+        
+        // Separador entre productos (excepto después del último)
+        if (index < productosAgregados.length - 1) {
+            mensaje += `\n`;
+        }
+    });
+    
+    // TOTAL (en negritas)
+    mensaje += `\n*TOTAL: ${totalGeneral.toFixed(2)}*`;
+    
+    // Codificar mensaje para URL
+    const mensajeCodificado = encodeURIComponent(mensaje);
+    
+    // Abrir WhatsApp sin número predeterminado
+    // El usuario elegirá a quién enviar desde la app
+    window.open(`https://wa.me/?text=${mensajeCodificado}`, '_blank');
+});
+</script>
+</body>
+</html>

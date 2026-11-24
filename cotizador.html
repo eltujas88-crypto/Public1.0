@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#173c33">
+  <title>Cotizador | Rutas del Sol · Cambios El Rey · Cambios El Cóndor</title>
+  <style>
+    :root { font-family: Arial, Helvetica, sans-serif; color: #302c2d; background: #f6f4ef; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 12px 30px; }
+    .app { max-width: 774px; margin: auto; }
+    button,input,select { font: inherit; }
+    button { cursor: pointer; }
+    .menu { background: #fff; border: 1px solid #dfd9ce; border-radius: 13px; overflow: hidden;
+      box-shadow: 0 2px 10px #4b291313; margin: 0 auto 13px; }
+    .menu summary { display: flex; min-height: 45px; align-items: center; gap: 10px; list-style: none;
+      padding: 8px 13px; cursor: pointer; user-select: none; }
+    .menu summary::-webkit-details-marker { display: none; }
+    .hamb { font-size: 20px; color: #a63a27; line-height: 1; }
+    .menu-heading { flex: 1; min-width: 0; }
+    .menu-heading strong { display: block; font-size: 12px; letter-spacing: .7px; }
+    .menu-heading small { display: block; color: #85766c; font-size: 10px; margin-top: 3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chev { color: #8e6a48; font-size: 17px; transition: transform .2s; }
+    .menu[open] .chev { transform: rotate(180deg); }
+    .menu-body { padding: 11px 12px 13px; border-top: 1px solid #eee8dd; background: #fffefb; }
+    .label { display: block; font-size: 10px; font-weight: 800; letter-spacing: .65px;
+      color: #745d55; margin: 2px 0 6px; }
+    #brandSelect { width: 100%; border: 1px solid #e1d3bd; border-radius: 8px;
+      padding: 9px 10px; color: #342b2b; background: #fff; font-weight: bold; font-size: 13px; }
+    .route-pills { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 9px; }
+    .route-pills button { border-radius: 8px; padding: 9px 5px; background: #fff; border: 1px solid #e1d3bd;
+      color: #635650; font-size: 11px; font-weight: 700; }
+    .route-pills button.active { background: #352c2f; color: #fff; border-color: #352c2f; }
+    .rates { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 8px; }
+    .rate-group { border: 1px solid #eae1d2; border-radius: 9px; background: white; padding: 9px; }
+    .rate-group .brand-name { display: block; font-size: 11px; margin-bottom: 7px; font-weight: 800; }
+    .rate-group .rate-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .rate-field label { display: block; font-size: 10px; margin-bottom: 4px; color: #6c6260; }
+    .rate-field input { width: 100%; padding: 9px; border: 1px solid #d9c7aa; border-radius: 7px;
+      text-align: center; font-size: 18px; font-weight: 800; color: #292020; background: #fffefa; }
+    .helper { color: #8d8073; font-size: 10px; margin: 8px 1px 0; line-height: 1.4; }
+    .cards { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 14px; }
+    .quote-wrap { width: 100%; max-width: 360px; }
+    .quote { border-radius: 13px; overflow: hidden; border: 1px solid var(--border);
+      background: #fff; box-shadow: 0 4px 13px #48351e18; }
+    .quote.rutas { --primary: #921c36; --dark: #75142b; --gold: #f0d393; --border: #e6ccac; --ink: #72172b; --cream:#fff8eb; --light:#fff0c7; }
+    .quote.rey { --primary: #164b85; --dark: #0c3769; --gold: #ffdb56; --border: #c6d5e1; --ink: #154574; --cream:#f5faff; --light:#ffe895; }
+    /* CAMBIOS EL CÓNDOR: identidad independiente, verde bosque, cobre y marfil.
+       Tarjeta asimétrica y etiquetas sólidas, en lugar de las franjas doradas. */
+    .quote.condor { --primary: #173e35; --dark: #102b26; --gold: #d9b183;
+      --border: #a1b8aa; --ink: #173e35; --cream: #eef4ef; --light: #dce9df;
+      border-radius: 5px 23px 5px 23px; border-width: 1.5px;
+      box-shadow: 0 8px 24px #14332920; }
+    .quote.condor .brand-header { background: linear-gradient(145deg, #112b26, #225246);
+      padding: 13px 10px 14px; position: relative; overflow: hidden; }
+    .quote.condor .brand-header::after { content: ''; position: absolute; bottom: 0;
+      left: 9%; width: 82%; height: 2px; background: #d9b183; }
+    .quote.condor .brand-title { font: 900 27px/1.06 Georgia, 'Times New Roman', serif;
+      letter-spacing: 1.2px; color: #fcfaf2; }
+    .quote.condor .condor-kicker { color:#d9b183; font-size: 10px; font-weight: 900;
+      letter-spacing: 4px; margin: 4px 0 5px; }
+    .quote.condor .brand-subtitle { font-size: 8px; letter-spacing: 2.15px;
+      font-weight: 700; color: #dce9df; }
+    .quote.condor .gold-line { display: none; }
+    .condor-emblem { width: 74px; height: 28px; margin: 0 auto; }
+    .condor-emblem svg { display: block; width: 100%; height: 100%; }
+    .quote.condor .meta { background: #eef4ef; }
+    .quote.condor .amount-label { background: #24483e; color: #f6f6ef;
+      border-left: 5px solid #d9b183; font-size: 12px; letter-spacing: 1.3px; }
+    .quote.condor .amount-row { background: #f3f8f4; }
+    .quote.condor .amount-input { border: 1.5px solid #a9c3b8; border-radius: 5px;
+      background: #fff; color: #153d34; }
+    .quote.condor .validity { background: #e1ece5; color: #1b493b;
+      border-top: 2px solid #d2b08a; font-size: 10px; letter-spacing: 1px; }
+
+    .quote .row { text-align: center; }
+    .brand-header { background: var(--primary); color: #fff; padding: 13px 7px 11px; }
+    .brand-title { font-size: 24px; font-weight: 900; letter-spacing: .35px; line-height: 1.1; }
+    .brand-subtitle { margin-top: 5px; color: var(--gold); font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+    .gold-line { width: 49px; height: 2px; border-radius: 9px; background: var(--gold); margin: 8px auto 0; }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; background: var(--cream); padding: 11px 8px; }
+    .meta .meta-item:first-child { border-right: 1px solid var(--border); }
+    .meta-label { font-size: 10px; letter-spacing: .65px; font-weight: 800; color: var(--ink); opacity: .78; }
+    .meta-value { margin-top: 5px; color: var(--ink); font-size: 23px; font-weight: 900; line-height: 1; }
+    .meta .date-value { font-size: 17px; padding-top: 3px; }
+    .amount-label { background: var(--light); color: var(--ink); font-size: 13px; font-weight: 900;
+      letter-spacing: .55px; padding: 10px 5px; }
+    .amount-row { background: #fff; padding: 11px 16px; }
+    .amount-input { display: block; width: 100%; border: 1px solid #eadfcd; border-radius: 8px;
+      background: #fffdfb; padding: 8px 9px; text-align: center; font-size: clamp(31px, 9vw, 45px);
+      font-weight: 900; line-height: 1.05; font-variant-numeric: tabular-nums; color: var(--ink);
+      appearance: none; min-width: 0; }
+    .amount-input:focus,.rate-field input:focus,#brandSelect:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+    .validity { padding: 11px 4px; color: var(--gold); background: var(--dark);
+      font-size: 11px; font-weight: 800; letter-spacing: .35px; }
+    .actions { margin-top: 7px; }
+    .actions button { display: block; width: 100%; padding: 12px 5px; border: 0; border-radius: 8px; font-weight: 800; font-size: 12px; }
+    .save-btn { background: #e8e1d4; color: #443630; }
+    .alert { text-align: center; font-size: 11px; color: #7a4b37; min-height: 15px; margin-top: 4px; }
+    .hint { margin: 12px auto; text-align: center; color: #857972; font-size: 11px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 360px) { body {padding: 8px;} .brand-title{font-size:21px;} .amount-input {font-size:33px;} }
+  </style>
+</head>
+<body>
+<main class="app">
+  <!-- Menú muy compacto y contraído de manera predeterminada -->
+  <details class="menu" id="menu">
+    <summary aria-label="Abrir o cerrar el menú de cotizaciones">
+      <span class="hamb">☰</span>
+      <span class="menu-heading"><strong>MENÚ DE COTIZACIONES</strong><small id="selectionSummary">Rutas del Sol · Bs → Soles</small></span>
+      <span class="chev" aria-hidden="true">⌄</span>
+    </summary>
+    <div class="menu-body">
+      <label class="label" for="brandSelect">MARCA</label>
+      <select id="brandSelect">
+        <option value="rutas">☀ RUTAS DEL SOL</option>
+        <option value="rey">♛ CAMBIOS EL REY</option>
+        <option value="condor">◆ CAMBIOS EL CÓNDOR</option>
+        <option value="todas">LAS TRES MARCAS</option>
+      </select>
+      <label class="label" style="margin-top:10px">MOSTRAR TABLA</label>
+      <div class="route-pills" role="group" aria-label="Cambiar la dirección de cotización">
+        <button type="button" data-direction="bs-sol" class="active">Bs → Soles</button>
+        <button type="button" data-direction="sol-bs">Soles → Bs</button>
+        <button type="button" data-direction="ambas">Ambas</button>
+      </div>
+      <label class="label">TIPOS DE CAMBIO (Bs POR 1 SOL)</label>
+      <div class="rates" id="rateSettings"></div>
+      <div class="helper" id="storageStatus">Cada marca tiene dos tipos de cambio independientes. Los cambios se guardan automáticamente en este navegador, aun si cierras la página.</div>
+    </div>
+  </details>
+  <section id="cards" class="cards" aria-label="Cotizaciones"></section>
+  
+</main>
+<script>
+(() => {
+  'use strict';
+  const BRANDS = {
+    rutas: { title: 'RUTAS DEL SOL', emoji: '☀', css: 'rutas', file: 'Rutas_del_Sol', colors: {primary:'#921c36', dark:'#75142b', gold:'#f0d393', ink:'#72172b', cream:'#fff8eb', light:'#fff0c7'} },
+    rey: { title: 'CAMBIOS EL REY', emoji: '♛', css: 'rey', file: 'Cambios_El_Rey', colors: {primary:'#164b85', dark:'#0c3769', gold:'#ffdb56', ink:'#154574', cream:'#f5faff', light:'#ffe895'} },
+    condor: { title: 'CAMBIOS EL CÓNDOR', emoji: '◆', css: 'condor', file: 'Cambios_El_Condor', colors: {primary:'#173e35', dark:'#102b26', gold:'#d9b183', ink:'#173e35', cream:'#eef4ef', light:'#dce9df'} }
+  };
+  const DIRECTIONS = {
+    'bs-sol': { from: 'ABONAR (BS)', to: 'RETIRAR (SOLES)', fromSymbol: 'Bs', toSymbol: 'S/', label: 'Bs → Soles' },
+    'sol-bs': { from: 'ABONAR (SOLES)', to: 'RETIRAR (BS)', fromSymbol: 'S/', toSymbol: 'Bs', label: 'Soles → Bs' }
+  };
+  const items = {};
+  for (const brand of ['rutas','rey','condor']) {
+    for (const dir of ['bs-sol','sol-bs']) {
+      items[brand + '-' + dir] = { brand, dir, rate: '3.49', edited: 'from', from: '0.00', to: '0.00' };
+    }
+  }
+  const cards = document.getElementById('cards');
+  const settings = document.getElementById('rateSettings');
+  const brandSelect = document.getElementById('brandSelect');
+  const menuSummary = document.getElementById('selectionSummary');
+  let selectedDirection = 'bs-sol';
+
+  const dateText = () => new Date().toLocaleDateString('es-BO', {day:'2-digit', month:'2-digit', year:'numeric'});
+  const number = raw => {
+    let s = String(raw).trim().replace(/\s+/g, '').replace(/[^\d.,-]/g,'');
+    if (!s) return NaN;
+    const comma = s.lastIndexOf(','), dot = s.lastIndexOf('.');
+    if (comma !== -1 && dot !== -1) s = comma > dot ? s.replace(/\./g,'').replace(',', '.') : s.replace(/,/g,'');
+    else if (comma !== -1) s = s.replace(',', '.');
+    return Number(s);
+  };
+  const two = x => Number.isFinite(x) && x >= 0 ? x.toFixed(2) : '0.00';
+
+  // Conserva las 6 tasas por separado, en el mismo navegador y dispositivo.
+  // Se recuperan antes de construir las tarjetas para mostrar siempre la última tasa.
+  const RATE_STORAGE_PREFIX = 'cotizador_3_marcas_tipo_cambio_v1_';
+  let storageWorks = true;
+  function readSavedRates() {
+    try {
+      for (const [id, item] of Object.entries(items)) {
+        const saved = window.localStorage.getItem(RATE_STORAGE_PREFIX + id);
+        if (saved !== null && Number.isFinite(number(saved)) && number(saved) > 0) {
+          item.rate = saved;
+        }
+      }
+    } catch (err) {
+      storageWorks = false;
+    }
+  }
+  function storeRate(id, text) {
+    // No sobrescribir una tasa válida si el usuario está borrando el campo.
+    if (!(number(text) > 0) || !Number.isFinite(number(text))) return;
+    try {
+      window.localStorage.setItem(RATE_STORAGE_PREFIX + id, text);
+    } catch (err) {
+      storageWorks = false;
+      const info = document.getElementById('storageStatus');
+      if (info) info.textContent = 'Atención: este navegador bloquea el guardado automático. Abre el archivo en Chrome en modo normal.';
+    }
+  }
+  readSavedRates();
+  if (!storageWorks) {
+    const info = document.getElementById('storageStatus');
+    if (info) info.textContent = 'Atención: no se pudo recuperar el guardado local. Abre el archivo en Chrome en modo normal.';
+  }
+
+  function recompute(item) {
+    const r = number(item.rate);
+    const a = number(item.from), b = number(item.to);
+    if (!(r > 0) || !Number.isFinite(r)) {
+      if (item.edited === 'from') item.to = '0.00'; else item.from = '0.00';
+      return;
+    }
+    if (item.edited === 'from') {
+      item.to = two(item.dir === 'bs-sol' ? a / r : a * r);
+    } else {
+      item.from = two(item.dir === 'bs-sol' ? b * r : b / r);
+    }
+  }
+  function createCard(item, id) {
+    const brand = BRANDS[item.brand], dir = DIRECTIONS[item.dir];
+    const brandHeader = item.brand === 'condor' ? `
+        <div class="condor-emblem" aria-hidden="true">
+          <svg viewBox="0 0 96 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M47 16 L27 8 5 3 14 14 34 19 47 30 60 19 80 14 91 3 69 8 49 16" stroke="#E1BF94" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M38 24 47 11 56 24" stroke="#F7F4E9" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="condor-kicker">CAMBIOS</div>
+        <div class="brand-title">EL CÓNDOR</div>
+        <div class="brand-subtitle">CAMBIO DE DIVISAS · COTIZACIONES</div>` : `
+        <div class="brand-title">${brand.emoji} ${brand.title}</div>
+        <div class="brand-subtitle">CASA DE CAMBIOS</div><div class="gold-line"></div>`;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'quote-wrap';
+    wrapper.id = 'card-' + id;
+    wrapper.innerHTML = `
+      <article class="quote ${brand.css}">
+        <div class="row brand-header">${brandHeader}</div>
+        <div class="row meta">
+          <div class="meta-item"><div class="meta-label">FECHA</div><div class="meta-value date-value">${dateText()}</div></div>
+          <div class="meta-item"><div class="meta-label">TIPO DE CAMBIO</div><div class="meta-value rate-value">${item.rate}</div></div>
+        </div>
+        <div class="row amount-label">${dir.from}</div>
+        <div class="row amount-row"><input class="amount-input from" type="text" inputmode="decimal" aria-label="${dir.from}" value="0.00" autocomplete="off"></div>
+        <div class="row amount-label">${dir.to}</div>
+        <div class="row amount-row"><input class="amount-input to" type="text" inputmode="decimal" aria-label="${dir.to}" value="0.00" autocomplete="off"></div>
+        <div class="row validity">COTIZACIÓN VÁLIDA POR 15 MINUTOS</div>
+      </article>
+      <div class="actions">
+        <button class="save-btn" type="button">GUARDAR</button>
+      </div>
+      <div class="alert" aria-live="polite"></div>`;
+    const inputFrom = wrapper.querySelector('.from');
+    const inputTo = wrapper.querySelector('.to');
+    inputFrom.addEventListener('input', () => { item.edited = 'from'; item.from = inputFrom.value; recompute(item); inputTo.value = item.to; });
+    inputTo.addEventListener('input', () => { item.edited = 'to'; item.to = inputTo.value; recompute(item); inputFrom.value = item.from; });
+    for (const inp of [inputFrom, inputTo]) {
+      inp.addEventListener('focus', () => { if (inp.value === '0.00') inp.select(); });
+      inp.addEventListener('blur', () => { if (!Number.isFinite(number(inp.value)) || number(inp.value) < 0) {
+        inp.value = '0.00'; if (inp === inputFrom) item.from = '0.00'; else item.to = '0.00'; recompute(item);
+        inputFrom.value = item.from; inputTo.value = item.to;
+      }});
+    }
+    wrapper.querySelector('.save-btn').addEventListener('click', () => saveJpg(item, wrapper));
+    return wrapper;
+  }
+  for (const brand of ['rutas','rey','condor']) {
+    for (const dir of ['bs-sol','sol-bs']) {
+      const id = brand + '-' + dir;
+      cards.appendChild(createCard(items[id], id));
+    }
+  }
+  function refreshRates() {
+    settings.innerHTML = '';
+    const visibleBrands = brandSelect.value === 'todas' ? ['rutas','rey','condor'] : [brandSelect.value];
+    for (const brand of visibleBrands) {
+      const block = document.createElement('div'); block.className = 'rate-group';
+      block.innerHTML = `<span class="brand-name">${BRANDS[brand].emoji} ${BRANDS[brand].title}</span><div class="rate-fields"></div>`;
+      for (const dir of ['bs-sol','sol-bs']) {
+        const item = items[brand + '-' + dir];
+        const cell = document.createElement('div'); cell.className = 'rate-field';
+        const lab = document.createElement('label'); lab.textContent = DIRECTIONS[dir].label;
+        const inp = document.createElement('input'); inp.value = item.rate; inp.type = 'text'; inp.inputMode = 'decimal';
+        inp.setAttribute('aria-label', 'Tipo de cambio ' + BRANDS[brand].title + ' ' + DIRECTIONS[dir].label);
+        inp.addEventListener('input', () => {
+          item.rate = inp.value;
+          storeRate(brand + '-' + dir, inp.value);
+          recompute(item);
+          const card = document.getElementById('card-' + brand + '-' + dir);
+          card.querySelector('.rate-value').textContent = inp.value || '—';
+          card.querySelector('.from').value = item.from;
+          card.querySelector('.to').value = item.to;
+        });
+        inp.addEventListener('blur', () => {
+          if (!Number.isFinite(number(inp.value)) || number(inp.value) <= 0) {
+            const previouslySaved = (() => {
+              try { return window.localStorage.getItem(RATE_STORAGE_PREFIX + brand + '-' + dir); }
+              catch (err) { return null; }
+            })();
+            const restored = previouslySaved && number(previouslySaved) > 0 ? previouslySaved : '3.49';
+            item.rate = restored;
+            inp.value = restored;
+            recompute(item);
+            const card = document.getElementById('card-' + brand + '-' + dir);
+            card.querySelector('.rate-value').textContent = restored;
+            card.querySelector('.from').value = item.from;
+            card.querySelector('.to').value = item.to;
+          }
+        });
+        cell.appendChild(lab); cell.appendChild(inp); block.querySelector('.rate-fields').appendChild(cell);
+      }
+      settings.appendChild(block);
+    }
+  }
+  function updateVisibility() {
+    const selectedBrand = brandSelect.value;
+    for (const brand of ['rutas','rey','condor']) for (const dir of ['bs-sol','sol-bs']) {
+      document.getElementById('card-' + brand + '-' + dir).hidden =
+        !(selectedBrand === 'todas' || selectedBrand === brand) ||
+        !(selectedDirection === 'ambas' || selectedDirection === dir);
+    }
+    const textBrand = selectedBrand === 'todas' ? 'Las 3 marcas' : BRANDS[selectedBrand].title;
+    const textDirection = selectedDirection === 'ambas' ? 'Ambas tablas' : DIRECTIONS[selectedDirection].label;
+    menuSummary.textContent = textBrand + ' · ' + textDirection;
+    document.querySelectorAll('.route-pills button').forEach(btn => {
+      const active = btn.dataset.direction === selectedDirection;
+      btn.classList.toggle('active', active); btn.setAttribute('aria-pressed', String(active));
+    });
+  }
+  brandSelect.addEventListener('change', () => { refreshRates(); updateVisibility(); });
+  document.querySelectorAll('.route-pills button').forEach(btn => btn.addEventListener('click', () => {
+    selectedDirection = btn.dataset.direction; updateVisibility();
+  }));
+  refreshRates(); updateVisibility();
+
+  function makeCanvas(item) {
+    const r = number(item.rate), a = number(item.from), b = number(item.to);
+    if (!(r > 0) || !Number.isFinite(r) || !Number.isFinite(a) || !Number.isFinite(b) || a < 0 || b < 0)
+      throw new Error('Escribe un tipo de cambio y montos válidos.');
+    const brand = BRANDS[item.brand], d = DIRECTIONS[item.dir], c = brand.colors;
+    const canvas = document.createElement('canvas'); canvas.width = 560; canvas.height = 570;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,560,570);
+    function bar(y,h,color) {ctx.fillStyle=color;ctx.fillRect(0,y,560,h);}
+    function text(str,y,font,color,limit=530) {
+      ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.font=font;ctx.fillText(String(str),280,y,limit);
+    }
+    function fitAmount(str,y,color) {
+      let fontSize=46; ctx.font='900 '+fontSize+'px Arial';
+      while (ctx.measureText(str).width>505 && fontSize>20) {fontSize-=2;ctx.font='900 '+fontSize+'px Arial';}
+      text(str,y,'900 '+fontSize+'px Arial',color,510);
+    }
+    // El Cóndor usa una composición editorial distinta también en la imagen JPG.
+    if (item.brand === 'condor') {
+      bar(0,118,c.dark);
+      ctx.strokeStyle = '#d9b183'; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+      ctx.beginPath();ctx.moveTo(207,18);ctx.lineTo(240,28);ctx.lineTo(280,45);
+      ctx.lineTo(320,28);ctx.lineTo(353,18);ctx.moveTo(248,42);ctx.lineTo(280,15);
+      ctx.lineTo(312,42);ctx.stroke();
+      text('CAMBIOS',59,'bold 13px Arial',c.gold);
+      text('EL CÓNDOR',88,'bold 32px Georgia','#fffaf0');
+      bar(118,84,c.cream);
+      ctx.fillStyle = '#9fb9aa'; ctx.fillRect(280,131,1,58);
+      ctx.fillStyle = c.ink;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.font='bold 11px Arial';ctx.fillText('FECHA',140,144);
+      ctx.fillText('TIPO DE CAMBIO',420,144);
+      ctx.font='bold 21px Arial';ctx.fillText(dateText(),140,173);
+      ctx.fillText(item.rate,420,173);
+      bar(202,54,'#254a40');ctx.fillStyle=c.gold;ctx.fillRect(0,202,8,54);
+      text(d.from,229,'bold 21px Arial','#fffaf0');
+      bar(256,88,'#f5f9f6');fitAmount(d.fromSymbol+' '+two(a),300,c.ink);
+      bar(344,54,'#254a40');ctx.fillStyle=c.gold;ctx.fillRect(0,344,8,54);
+      text(d.to,371,'bold 21px Arial','#fffaf0');
+      bar(398,88,'#f5f9f6');fitAmount(d.toSymbol+' '+two(b),441,c.ink);
+      bar(486,84,'#dfece3');ctx.fillStyle=c.gold;ctx.fillRect(0,486,560,3);
+      text('COTIZACIÓN VÁLIDA POR 15 MINUTOS',528,'bold 17px Arial',c.ink,540);
+      return canvas;
+    }
+    // Exactamente 7 filas en la imagen comprimida.
+    bar(0,100,c.primary);
+    text(brand.emoji+' '+brand.title,39,'900 30px Arial','#ffffff',525);
+    text('CASA DE CAMBIOS',72,'bold 14px Arial',c.gold);
+    bar(100,90,c.cream);
+    text('FECHA',119,'bold 12px Arial',c.ink,240);
+    text('TIPO DE CAMBIO',119,'bold 12px Arial',c.ink,240);
+    text(dateText()+'     |     '+item.rate,157,'bold 25px Arial',c.ink,540);
+    bar(190,57,c.light);text(d.from,218,'bold 22px Arial',c.ink);
+    bar(247,90,'#ffffff');fitAmount(d.fromSymbol+' '+two(a),291,c.ink);
+    bar(337,57,c.light);text(d.to,365,'bold 22px Arial',c.ink);
+    bar(394,90,'#ffffff');fitAmount(d.toSymbol+' '+two(b),438,c.ink);
+    bar(484,86,c.dark);text('COTIZACIÓN VÁLIDA POR 15 MINUTOS',527,'bold 18px Arial',c.gold,535);
+    return canvas;
+  }
+  function jpgFile(item) {
+    return new Promise((resolve,reject) => {
+      try {
+        // Reducción moderada de tamaño + JPG optimizado: mantiene legibles los montos.
+        const source = makeCanvas(item);
+        const compact = document.createElement('canvas');
+        compact.width = 480;
+        compact.height = Math.round(source.height * compact.width / source.width);
+        const ctx = compact.getContext('2d', {alpha: false});
+        ctx.drawImage(source, 0, 0, compact.width, compact.height);
+        compact.toBlob(blob => {
+          if (!blob) { reject(new Error('No se pudo crear la imagen.')); return; }
+          const fileName = BRANDS[item.brand].file + '_' + (item.dir === 'bs-sol' ? 'Bs_a_Soles' : 'Soles_a_Bs') + '.jpg';
+          resolve(new File([blob],fileName,{type:'image/jpeg'}));
+        }, 'image/jpeg', 0.58);
+      } catch (e) {reject(e);}
+    });
+  }
+  const message = (wrapper, s) => {wrapper.querySelector('.alert').textContent=s;};
+  function download(file) {
+    const url = URL.createObjectURL(file);
+    const link = document.createElement('a'); link.href=url; link.download=file.name;
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
+  }
+  async function saveJpg(item,wrapper) {
+    try {const file=await jpgFile(item);download(file);message(wrapper,'JPG comprimido: '+Math.round(file.size/1024)+' KB');}
+    catch(e) {message(wrapper,e.message);}
+  }
+
+})();
+</script>
+</body>
+</html>
